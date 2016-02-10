@@ -1,0 +1,28 @@
+{
+    "name": "tigron/skeleton-package-delivery",
+    "description": "Tigron Skeleton Delivery functionality",
+    "type": "library",
+    "require-dev": {
+		"tigron/skeleton-database": "dev-master",
+		"tigron/skeleton-pager": "*"
+    },
+    "require" : {
+        "bower-asset/bootstrap": "3.3.*",
+        "bower-asset/tigron-confirm-modal": "*"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tigron BVBA",
+            "email": "support@tigron.be"
+        }
+    ],
+    "support": {
+        "source": "https://github.com/tigron/skeleton-package-delivery",
+        "issues": "https://github.com/tigron/skeleton-package-delivery/issues"
+    },
+    "autoload": {
+        "psr-4": { "Skeleton\\Package\\": "lib/Skeleton/Package/" }
+    }
+
+}
