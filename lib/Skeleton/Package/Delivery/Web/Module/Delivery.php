@@ -7,12 +7,12 @@
  * @author Gerry Demaret <gerry@tigron.be>
  */
 
-namespace Skeleton\Package\Web\Module;
+namespace Skeleton\Package\Delivery\Web\Module;
 
 use \Skeleton\Pager\Web\Pager;
 use \Skeleton\Core\Web\Session;
-use \Skeleton\Package\Web\Module\Crud;
-use \Skeleton\Package\Shipment;
+use \Skeleton\Package\Crud\Web\Module\Crud;
+use \Skeleton\Package\Delivery\Shipment;
 
 class Delivery extends Crud {
 
@@ -41,7 +41,7 @@ class Delivery extends Crud {
 	 * @return Skeleton\Pager\Web\Pager $pager
 	 */
 	public function get_pager() {
-		$pager = new Pager('\Skeleton\Package\Delivery');
+		$pager = new Pager('\Skeleton\Package\Delivery\Delivery');
 		$pager->add_sort_permission('id');
 		return $pager;
 	}

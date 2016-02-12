@@ -9,7 +9,8 @@
  */
 
 namespace Skeleton\Package\Delivery;
-use Skeleton\Package\Delivery;
+
+use Skeleton\Package\Delivery\Delivery;
 use Skeleton\Database\Database;
 
 class Item {

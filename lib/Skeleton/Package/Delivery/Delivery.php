@@ -8,7 +8,7 @@
  * @author David Vandemaele <david@tigron.be>
  */
 
-namespace Skeleton\Package;
+namespace Skeleton\Package\Delivery;
 
 class Delivery {
 	use \Skeleton\Object\Get;

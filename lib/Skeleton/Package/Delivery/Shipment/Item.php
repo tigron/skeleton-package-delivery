@@ -8,9 +8,9 @@
  * @author David Vandemaele <david@tigron.be>
  */
 
-namespace Skeleton\Package\Shipment;
+namespace Skeleton\Package\Delivery\Shipment;
 
-use Skeleton\Package\Shipment;
+use Skeleton\Package\Delivery\Shipment;
 use Skeleton\Database\Database;
 
 class Item {
@@ -31,7 +31,7 @@ class Item {
 	 * @return \Skeleton\Package\Delivery\Item $delivery_item
 	 */
 	public function get_delivery_item() {
-		return \Skeleton\Package\deliver\Item::get_by_id($this->delivery_item_id);
+		return \Skeleton\Package\Delivery\Item::get_by_id($this->delivery_item_id);
 	}
 
 	/**

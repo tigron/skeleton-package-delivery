@@ -8,9 +8,9 @@
  * @author David Vandemaele <david@tigron.be>
  */
 
-namespace Skeleton\Package;
+namespace Skeleton\Package\Delivery;
 
-use Skeleton\Package\Shipment\Item;
+use Skeleton\Package\Delivery\Shipment\Item;
 use Skeleton\Database\Database;
 
 class Shipment {
@@ -37,7 +37,7 @@ class Shipment {
 	 * @access public
 	 * @param \Skeleton\Package\Courier
 	 */
-	public function set_courier(\Skeleton\Package\Courier $courier) {
+	public function set_courier(\Skeleton\Package\Delivery\Courier $courier) {
 		$this->courier_object_classname = get_class($courier);
 		$this->courier_object_id = $courier->id;
 	}
