@@ -4,7 +4,6 @@
     "type": "library",
     "require-dev": {
 		"tigron/skeleton-database": "dev-master",
-		"tigron/skeleton-pager": "*"
     },
     "require" : {
         "bower-asset/bootstrap": "3.3.*",

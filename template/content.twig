@@ -1,0 +1,29 @@
+
+{% block content %}
+	{% embed "@skeleton-package-crud/content.twig" %}
+		{% block page_edit %}
+			{% include "@skeleton-package-delivery/edit.twig" %}
+		{% endblock page_edit %}
+
+
+		{% block pager_table_head %}
+			<th>{{ pager.create_header('Delivery ID'|trans, 'id')|raw }}</th>
+			<th>{{ pager.create_header('Created'|trans, 'created')|raw }}</th>
+			<th>{{ pager.create_header('Courier'|trans, 'courier_object_id')|raw }}</th>
+			<th>{{ pager.create_header('Shipped'|trans, 'shipped')|raw }}</th>
+		{% endblock pager_table_head %}
+
+		{% block pager_table_row %}
+			<td>{{ object.id }}</td>
+			<td>{{ object.created|datetime }}</td>
+			<td>{{ object.get_courier().get_name() }}</td>
+			<td>
+				{% if object.shipped %}
+					<span class="label label-success">{% trans "Yes" %}</span>
+				{% else %}
+					<span class="label label-danger">{% trans "No" %}</span>
+				{% endif %}
+			</td>
+		{% endblock pager_table_row %}
+	{% endembed %}
+{% endblock content %}

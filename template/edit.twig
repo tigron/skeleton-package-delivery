@@ -1,0 +1,225 @@
+<ol class="breadcrumb">
+	<li><a href="/">{% trans "Root" %}</a></li>
+	<li><a href="/{{ env.server.REDIRECT_URL }}">{% trans "Delivery" %}</a></li>
+	<li class="active">{% trans "Edit delivery" %} {{ delivery.id }}</li>
+</ol>
+
+<!-- new Row -->
+<div class="row">
+	<div class="col-xs-6">
+		<div class="panel panel-default">
+			<div class="panel-heading">{% trans "Delivery information" %}</div>
+			<div class="panel-body">
+				<dl class="dl-horizontal">
+					<dt>{% trans "Delivery number" %}</dt>
+					<dd>{{ object.id }}</dd>
+
+					<dt>{% trans "Trigger" %}</dt>
+					<dd>{{ object.trigger_object_classname }} {{ object.trigger_object_id }}</a></dd>
+
+					<dt>{% trans "Created" %}</dt>
+					<dd>{{ object.created|datetime }}</dd>
+
+					<dt>{% trans "Shipping method" %}</dt>
+					<dd>{{ object.get_courier().get_name() }}</dd>
+
+					<dt>{% trans "Shipped" %}</dt>
+					<dd>
+						{% if object.shipped %}
+							<span class="label label-success">{% trans "Yes" %}</span>
+						{% else %}
+							<span class="label label-danger">{% trans "No" %}</span>
+						{% endif %}
+					</dd>
+				</dl>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-xs-6">
+		{% set recipient = object.get_delivery_recipient() %}
+
+		<div class="panel panel-default">
+			<div class="panel-heading">{% trans "Recipient information" %}</div>
+			<div class="panel-body">
+				<dl class="dl-horizontal">
+					<dt>{% trans "Name" %}</dt>
+					<dd>{{ recipient.get_firstname() }} {{ recipient.get_lastname() }}</dd>
+
+					<dt>{% trans "Company" %}</dt>
+					<dd>{{ recipient.get_company() }}</dd>
+
+					<dt>{% trans "Street" %}</dt>
+					<dd>{{ recipient.get_street() }} {{ recipient.get_housenumber() }}</dd>
+
+					<dt>{% trans "City" %}</dt>
+					<dd>{{ recipient.get_zipcode() }} {{ recipient.get_city() }}</dd>
+
+					<dt>{% trans "Country" %}</dt>
+					<dd>{{ recipient.get_country().name }}</dd>
+
+					<dt>{% trans "Phone" %}</dt>
+					<dd>{{ recipient.get_phone() }}</dd>
+
+					<dt>{% trans "Fax" %}</dt>
+					<dd>{{ recipient.get_fax() }}</dd>
+
+					<dt>{% trans "VAT" %}</dt>
+					<dd>{{ recipient.get_vat() }}</dd>
+
+				</dl>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- end of .row -->
+
+<!-- New row -->
+<div class="row">
+	<div class="col-xs-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">{% trans "Shipment overview" %}</div>
+			<div class="panel-body">
+				<table class="table table-alternate table-hover">
+					<thead>
+						<tr>
+							<th>{% trans "Product to ship" %}</th>
+							<th>{% trans "Amount" %}</th>
+							<th>{% trans "Already shipped" %}</th>
+							<th>{% trans "To ship" %}</th>
+						</tr>
+					</thead>
+					<tbody>
+					{% for delivery_item in object.get_overview() %}
+					<tr>
+						<td>
+							{{ delivery_item.deliverable.get_name() }}
+						</td>
+
+						<td>{{ delivery_item.total }}</td>
+						<td>{{ delivery_item.shipped }}</td>
+						<td>{{ delivery_item.total-delivery_item.shipped }}</td>
+					</tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- end of .row -->
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		{% trans "Packages" %}
+		{% if not delivery.shipped %}
+		<div class="pull-right">
+			<a href="#new_shipment" data-toggle="modal"><span class="glyphicon glyphicon-plus"></span> {% trans "New package" %}</a>
+		</div>
+		{% endif %}
+	</div>
+	<div class="panel-body">
+
+	{% for shipment in object.get_shipments() %}
+		<div class="col-xs-6">
+			<div class="panel {% if shipment.delivered %}panel-success{% else %}panel-default{% endif %}">
+				<div class="panel-heading">{% trans "Package" %} {{ shipment.id }}</div>
+				<div class="panel-body">
+					<div class="col-xs-6">
+						<address>
+							<strong>{{ shipment.company }} ({{ shipment.firstname }} {{ shipment.lastname }})</strong><br>
+							{% if shipment.line1 != '' %}
+								{{ shipment.line1 }} <br />
+							{% else %}
+								{{ shipment.street }} {{ shipment.housenumber }} <br />
+							{% endif %}
+
+							{% if shipment.line2 != '' %}
+								{{ shipment.line2 }} <br />
+							{% endif %}
+							{% if shipment.line3 != '' %}
+								{{ shipment.line3 }} <br />
+							{% endif %}
+
+							{{ shipment.zip }} {{ shipment.city }}<br>
+							<abbr title="Phone">P:</abbr> {{ shipment.phone }} <abbr title="Fax">F:</abbr> {{ shipment.fax }}<br />
+							<abbr title="Email">E:</abbr> {{ shipment.email }}
+						</address>
+					</div>
+
+					<div class="col-xs-6">
+						<dl>
+							<dt>{% trans "Shipping type" %}</dt>
+							<dd>{{ shipment.get_courier().get_name() }}</dd>
+
+							<dt>{% trans "Created" %}</dt>
+							<dd>{{ shipment.created|datetime }}</dd>
+
+						</dl>
+					</div>
+				</div>
+				<table class="table table-hover table-alternate">
+				<thead>
+					<tr>
+						<th>{% trans "Stock Product type" %}</th>
+						<th>{% trans "Amount" %}</th>
+					</tr>
+				</thead>
+				<tbody>
+				{% for overview_item in shipment.get_overview() %}
+					<tr>
+						<td>{{ overview_item.deliverable.get_name() }}</td>
+						<td>{{ overview_item.total }}</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+				</table>
+
+				{% if shipment.label_file_id > 0 %}
+					<div class="panel-footer">
+						<a href="/file?id={{ shipment.label_file_id }}">
+							<i class="fa fa-barcode"></i> {% trans "UPS Label" %}
+						</a>
+					</div>
+				{% endif %}
+			</div>
+		</div>
+	{% else %}
+		<div class="alert alert-warning">{% trans "Nothing is shipped yet." %}</div>
+	{% endfor %}
+
+
+	</div>
+</div>
+
+{% include "@skeleton-package-delivery/modal/new_package.twig" with {"id": "new_shipment", "delivery": object, "modal_size": "lg" } %}
+
+<div class="modal fade" id="shipment-details" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">{% trans "Details" %}</h4>
+			</div>
+			<div class="modal-body">
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Close" %}</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	function trace(shipment_id) {
+		$('#shipment-details .modal-body').load('/sales/shipment?action=trace&id=' + shipment_id, function() {
+			$('#shipment-details').modal();
+		});
+	}
+
+	function print_label(shipment_id) {
+		$('#shipment-details .modal-body').load('/sales/shipment?action=print_label&id=' + shipment_id, function() {
+			// Notification could go here
+		});
+	}
+</script>
