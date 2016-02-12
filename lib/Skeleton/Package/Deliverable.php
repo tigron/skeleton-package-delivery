@@ -1,6 +1,6 @@
 <?php
 /**
- * Delivery interface
+ * Deliverable interface
  *
  *
  * @author Gerry Demaret <gerry@tigron.be>

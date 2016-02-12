@@ -66,11 +66,12 @@ Create a route in your application Config.php
 	]
 
 Now make sure you implement the following classes:
+
 *Deliverable*
 
 	<?php
 	/**
-	 * Delivery interface
+	 * Deliverable interface
 	 *
 	 *
 	 * @author Gerry Demaret <gerry@tigron.be>
