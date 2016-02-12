@@ -3,11 +3,12 @@
     "description": "Tigron Skeleton Delivery functionality",
     "type": "library",
     "require-dev": {
-		"tigron/skeleton-database": "dev-master",
+		"tigron/skeleton-database": "dev-master"
     },
     "require" : {
         "bower-asset/bootstrap": "3.3.*",
-        "bower-asset/tigron-confirm-modal": "*"
+        "bower-asset/tigron-confirm-modal": "*",
+        "tigron/skeleton-package-crud": "*"
     },
     "license": "MIT",
     "authors": [
