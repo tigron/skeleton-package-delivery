@@ -10,8 +10,8 @@
 
 namespace Skeleton\Package\Delivery;
 
-use Skeleton\Package\Delivery\Shipment\Item;
-use Skeleton\Database\Database;
+use \Skeleton\Package\Delivery\Shipment\Item;
+use \Skeleton\Database\Database;
 
 class Shipment {
 	use \Skeleton\Object\Get;
@@ -96,6 +96,9 @@ class Shipment {
 			}
 
 			$result[$deliverable->id]['total']++;
+			if ($delivery_item->shipment_item_id > 0) {
+				$result[$deliverable->id]['shipped']++;
+			}
 		}
 		return $result;
 	}
@@ -107,6 +110,17 @@ class Shipment {
 	 */
 	public function handle() {
 		$this->get_courier()->handle($this);
+
+		/**
+		 * Manage the stock
+		 */
+		if (!class_exists('\Skeleton\Package\Stock\Stock')) {
+			return;
+		}
+
+		foreach ($this->get_overview() as $item) {
+			\Skeleton\Package\Stock\Stock::change($item['deliverable'], $item['shipped'], $this, '');
+		}
 	}
 
 	/**

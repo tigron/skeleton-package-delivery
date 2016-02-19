@@ -181,7 +181,7 @@
 		<tbody>
 		{% for delivery_item in delivery.get_overview() %}
 		{% set to_ship = delivery_item.total-delivery_item.shipped %}
-		<tr {% if delivery_item.stock_product_type.stock < to_ship %}class="warning"{% endif %}>
+		<tr {% if delivery_item.stock < to_ship %}class="warning"{% endif %}>
 			<td>
 				<p class="form-control-static">
 					{{ delivery_item.deliverable.get_name() }}
@@ -215,7 +215,7 @@
 			</td>
 			<td>
 				<p class="form-control-static">
-					{{ delivery_item.deliverable.stock }}
+					{{ delivery_item.stock }}
 				</p>
 			</td>
 

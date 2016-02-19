@@ -52,7 +52,7 @@ class Delivery extends Crud {
 	 * @access public
 	 */
 	public function display_add_shipment() {
-		$delivery = \Skeleton\Package\Delivery::get_by_id($_GET['id']);
+		$delivery = \Skeleton\Package\Delivery\Delivery::get_by_id($_GET['id']);
 		$shipment = new Shipment();
 		$shipment->delivery_id = $delivery->id;
 
@@ -95,7 +95,7 @@ class Delivery extends Crud {
 
 				for ($i=1; $i<=$count; $i++) {
 					$delivery_item = array_shift($delivery_items);
-					$shipment_item = new \Skeleton\Package\Shipment\Item();
+					$shipment_item = new \Skeleton\Package\Delivery\Shipment\Item();
 					$shipment_item->delivery_item_id = $delivery_item->id;
 					$shipment_item->shipment_id = $shipment->id;
 					$shipment_item->save();
@@ -107,7 +107,7 @@ class Delivery extends Crud {
 		$shipment->handle();
 		$delivery->check_shipped();
 
-		Session::Redirect($_SERVER['REDIRECT_URL'] . '?action=edit&id=' . $delivery->id);
+		Session::Redirect($this->get_module_path() . '?action=edit&id=' . $delivery->id);
 	}
 
 	/**

@@ -33,7 +33,7 @@ class Delivery {
 	 * @access public
 	 * @param \Skeleton\Package\Deliverable $deliverable
 	 */
-	public function add_deliverable(\Skeleton\Package\Deliverable $deliverable) {
+	public function add_deliverable(\Skeleton\Package\Delivery\Deliverable $deliverable) {
 		$item = new \Skeleton\Package\Delivery\Item();
 		$item->delivery_id = $this->id;
 		$item->set_deliverable($deliverable);
@@ -128,6 +128,9 @@ class Delivery {
 					'shipped' => 0,
 					'total' => 0
 				];
+				if (class_exists('\Skeleton\Package\Stock\Stock')) {
+					$result[$deliverable->id]['stock'] = \Skeleton\Package\Stock\Stock::get($deliverable);
+				}
 			}
 
 			$result[$deliverable->id]['total']++;

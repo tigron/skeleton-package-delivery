@@ -28,7 +28,7 @@ interface Courier {
 	 * @param Shipment $shipment
 	 * @return array $errors
 	 */
-	public function validate_shipment(\Skeleton\Package\Shipment $shipment);
+	public function validate_shipment(\Skeleton\Package\Delivery\Shipment $shipment);
 
 	/**
 	 * Handle a shipment
@@ -36,6 +36,6 @@ interface Courier {
 	 * @access public
 	 * @param \Skeleton\Package\Shipment $shipment
 	 */
-	public function handle(\Skeleton\Package\Shipment $shipment);
+	public function handle(\Skeleton\Package\Delivery\Shipment $shipment);
 
 }

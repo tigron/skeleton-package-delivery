@@ -29,7 +29,7 @@ class Item {
 	 * @access public
 	 * @param Deliverable $deliverable
 	 */
-	public function set_deliverable(\Skeleton\Package\Deliverable $deliverable) {
+	public function set_deliverable(\Skeleton\Package\Delivery\Deliverable $deliverable) {
 		$this->deliverable_object_classname = get_class($deliverable);
 		$this->deliverable_object_id = $deliverable->id;
 	}
@@ -71,7 +71,7 @@ class Item {
 	 * @param Deliverable $deliverable
 	 * @return array $delivery_items
 	 */
-	public static function get_by_delivery_deliverable(Delivery $delivery, \Skeleton\Package\Deliverable $deliverable) {
+	public static function get_by_delivery_deliverable(Delivery $delivery, \Skeleton\Package\Delivery\Deliverable $deliverable) {
 		$db = Database::get();
 		$ids = $db->get_column('SELECT id FROm delivery_item WHERE delivery_id=? AND deliverable_object_classname=? AND deliverable_object_id=?', [ $delivery->id, get_class($deliverable), $deliverable->id ]);
 		$objects = [];
