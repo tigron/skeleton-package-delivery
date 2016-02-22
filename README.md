@@ -90,7 +90,15 @@ Now make sure you implement the following classes:
 		 * @return string $name
 		 */
 		public function get_name();
-	}
+
+		/**
+		 * Get weight
+		 *
+		 * @access public
+		 * @return double $weight (in kg)
+		 */
+		public function get_weight();
+		}
 
 *Delivery\Recipient*
 
@@ -246,6 +254,38 @@ Now make sure you implement the following classes:
 		 * @param \Skeleton\Package\Shipment $shipment
 		 */
 		public function handle(\Skeleton\Package\Shipment $shipment);
+
+		/**
+		 * Is traceable
+		 *
+		 * @access public
+		 * @return bool $traceable
+		 */
+		public function is_traceable();
+
+		/**
+		 * Trace
+		 *
+		 * @access public
+		 * @return array  $trace
+		 */
+		public function trace(\Skeleton\Package\Delivery\Shipment $shipment);
+
+		/**
+		 * Has label
+		 *
+		 * @access public
+		 * @return bool $has_label
+		 */
+		public function has_label();
+
+		/**
+		 * Get label
+		 *
+		 * @access public
+		 * @return File $label
+		 */
+		public function get_label(\Skeleton\Package\Delivery\Shipment $shipment);
 
 	}
 

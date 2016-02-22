@@ -27,5 +27,4 @@ interface Deliverable {
 	 * @return double $weight (in kg)
 	 */
 	public function get_weight();
-
 }

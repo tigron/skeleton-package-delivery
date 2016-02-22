@@ -3,7 +3,8 @@
     "description": "Tigron Skeleton Delivery functionality",
     "type": "library",
     "require-dev": {
-		"tigron/skeleton-database": "dev-master"
+		"tigron/skeleton-database": "dev-master",
+		"tigron/skeleton-file": "*"
     },
     "require" : {
         "bower-asset/bootstrap": "3.3.*",
