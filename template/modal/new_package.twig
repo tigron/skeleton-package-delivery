@@ -4,9 +4,9 @@
 
 {% block body %}
 	{% set delivery_recipient = delivery.get_delivery_recipient() %}
-<form action="{{ env.server.REDIRECT_URL }}?action=add_shipment&id={{ delivery.id }}" method="post" class="form-horizontal form-condensed" id="shipment_form">
+<form action="{{ env.module.get_module_path() }}?action=add_shipment&id={{ delivery.id }}" method="post" class="form-horizontal form-condensed" id="shipment_form">
 
-	<div class="alert alert-danger hide" id="validation-error">
+	<div class="alert alert-danger hide" id="delivery-validation-error">
 		{% trans "Not all fields are filled in correctly." %} {% trans "Please review the errors and retry." %}
 		<ul>
 			<li class="hide error_firstname error_lastname">{% trans "The length of firstname and lastname combined (+space) cannot be longer than 35 characters." %}</li>
@@ -244,7 +244,7 @@
 		$('li[class^="error_"]').hide();
 
 		$('#validation-error').hide();
-		$.post( "{{ env.server.REDIRECT_URL }}?action=validate_shipment", { delivery_id: {{ delivery.id }}, form: $('#shipment_form').serialize() }, function( data ) {
+		$.post( "{{ (env.module.get_module_path() ~ '?action=validate_shipment')|reverse_rewrite }}", { delivery_id: {{ delivery.id }}, form: $('#shipment_form').serialize() }, function( data ) {
 			if (!data.validated) {
 				$.each(data.shipment_errors, function(key, value) {
 					$('input[name="shipment[' + key + ']"]').parents('.form-group').addClass('has-error');
@@ -257,7 +257,7 @@
 				$.each(data.shipment_item_errors, function(key, value) {
 					$('input[name^=shipment_item]').parents('td').addClass('has-error');
 				});
-				$('#validation-error').show();
+				$('#delivery-validation-error').removeClass('hide');
 			} else {
 				$('#shipment_form').unbind('submit').submit();
 			}

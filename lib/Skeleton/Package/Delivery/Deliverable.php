@@ -20,5 +20,12 @@ interface Deliverable {
 	 */
 	public function get_name();
 
+	/**
+	 * Get weight
+	 *
+	 * @access public
+	 * @return double $weight (in kg)
+	 */
+	public function get_weight();
 
 }

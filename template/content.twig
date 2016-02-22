@@ -1,6 +1,5 @@
-
 {% block content %}
-	{% embed "@skeleton-package-crud/content.twig" %}
+	{% embed "@skeleton-package-crud/content.twig" with { 'object_name': 'Delivery'|trans} %}
 		{% block page_edit %}
 			{% include "@skeleton-package-delivery/edit.twig" %}
 		{% endblock page_edit %}

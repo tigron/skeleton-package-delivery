@@ -43,6 +43,31 @@ class Shipment {
 	}
 
 	/**
+	 * Set courier_data
+	 *
+	 * @access public
+	 * @param array $courier_data
+	 */
+	public function set_courier_data($data) {
+		$this->details['courier_data'] = serialize($data);
+	}
+
+	/**
+	 * Get courier_data
+	 *
+	 * @access public
+	 * @return array $courier_data
+	 */
+	public function get_courier_data() {
+		$data = @unserialize($this->courier_data);
+		if ($data === false) {
+			return [];
+		} else {
+			return $data;
+		}
+	}
+
+	/**
 	 * Get shipment_items
 	 *
 	 * @access public
@@ -66,7 +91,8 @@ class Shipment {
 		$items = $this->get_shipment_items();
 		$weight = 0;
 		foreach ($items as $item) {
-			$weight += $item->stock_product_type->weight;
+			$delivery_item = \Skeleton\Package\Delivery\Item::get_by_id($item->delivery_item_id);
+			$weight += $delivery_item->get_deliverable()->get_weight();
 		}
 		return $weight;
 	}

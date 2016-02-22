@@ -11,6 +11,7 @@ namespace Skeleton\Package\Delivery\Web\Module;
 
 use \Skeleton\Pager\Web\Pager;
 use \Skeleton\Core\Web\Session;
+use \Skeleton\Core\Web\Template;
 use \Skeleton\Package\Crud\Web\Module\Crud;
 use \Skeleton\Package\Delivery\Shipment;
 
@@ -171,6 +172,39 @@ class Delivery extends Crud {
 		echo json_encode($result);
 		$this->template = false;
 	}
+
+	/**
+	 * Trace
+	 *
+	 * @access public
+	 */
+	public function display_trace() {
+		$this->template = false;
+		$template = Template::Get();
+
+		$shipment = Shipment::get_by_id($_GET['id']);
+		$template->assign('shipment', $shipment);
+
+		$trace = $shipment->get_courier()->trace($shipment);
+		$template->assign('trace', $trace);
+
+		$this->template = '@skeleton-package-delivery/trace.twig';
+	}
+
+	/**
+	 * Print label
+	 *
+	 * @access public
+	 */
+	public function display_label() {
+		$this->template = false;
+		$shipment = Shipment::get_by_id($_GET['id']);
+		$template = Template::Get();
+
+		$file = $shipment->get_courier()->get_label($shipment);
+		$file->client_download();
+	}
+
 
 	/**
 	 * Is deletable

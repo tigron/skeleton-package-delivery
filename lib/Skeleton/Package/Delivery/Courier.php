@@ -38,4 +38,36 @@ interface Courier {
 	 */
 	public function handle(\Skeleton\Package\Delivery\Shipment $shipment);
 
+	/**
+	 * Is traceable
+	 *
+	 * @access public
+	 * @return bool $traceable
+	 */
+	public function is_traceable();
+
+	/**
+	 * Trace
+	 *
+	 * @access public
+	 * @return array  $trace
+	 */
+	public function trace(\Skeleton\Package\Delivery\Shipment $shipment);
+
+	/**
+	 * Has label
+	 *
+	 * @access public
+	 * @return bool $has_label
+	 */
+	public function has_label();
+
+	/**
+	 * Get label
+	 *
+	 * @access public
+	 * @return File $label
+	 */
+	public function get_label(\Skeleton\Package\Delivery\Shipment $shipment);
+
 }

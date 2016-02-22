@@ -155,6 +155,20 @@
 							<dt>{% trans "Created" %}</dt>
 							<dd>{{ shipment.created|datetime }}</dd>
 
+							{% if shipment.get_courier().is_traceable() %}
+								<dt>{% trans "Shipping details" %}</dt>
+								<dd><a href="javascript:void(0);" onclick="trace({{ shipment.id }});">{% trans "Details" %}</a></dd>
+							{% endif %}
+
+							{% if shipment.get_courier().has_label() %}
+								<dt>{% trans "Handling PDF" %}</dt>
+								<dd>
+									<i class="fa fa-file-pdf-o"></i>
+									<a href="{{ env.module.get_module_path() }}?id={{ shipment.id }}&action=label">{% trans "Label" %}</a>
+								</dd>
+							{% endif %}
+
+
 						</dl>
 					</div>
 				</div>
@@ -174,14 +188,6 @@
 				{% endfor %}
 				</tbody>
 				</table>
-
-				{% if shipment.label_file_id > 0 %}
-					<div class="panel-footer">
-						<a href="/file?id={{ shipment.label_file_id }}">
-							<i class="fa fa-barcode"></i> {% trans "UPS Label" %}
-						</a>
-					</div>
-				{% endif %}
 			</div>
 		</div>
 	{% else %}
@@ -212,7 +218,7 @@
 
 <script type="text/javascript">
 	function trace(shipment_id) {
-		$('#shipment-details .modal-body').load('/sales/shipment?action=trace&id=' + shipment_id, function() {
+		$('#shipment-details .modal-body').load('{{ env.module.get_path() }}?action=trace&id=' + shipment_id, function() {
 			$('#shipment-details').modal();
 		});
 	}
