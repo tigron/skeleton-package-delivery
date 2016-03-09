@@ -181,7 +181,7 @@
 		<tbody>
 		{% for delivery_item in delivery.get_overview() %}
 		{% set to_ship = delivery_item.total-delivery_item.shipped %}
-		<tr {% if delivery_item.stock < to_ship %}class="warning"{% endif %}>
+		<tr {% if delivery_item.stock < to_ship %}class="danger"{% endif %}>
 			<td>
 				<p class="form-control-static">
 					{{ delivery_item.deliverable.get_name() }}
@@ -204,7 +204,11 @@
 				</p>
 			</td>
 
-			{% set max = to_ship %}
+			{% if to_ship > delivery_item.stock %}
+				{% set max = delivery_item.stock %}
+			{% else %}
+				{% set max = to_ship %}
+			{% endif %}
 
 			<td>
 				{% if to_ship == 0 %}
@@ -213,6 +217,7 @@
 				<input type="number" max="{{ max }}" min="0" class="form-control has-error" name="shipment_item[{{ delivery_item.deliverable|get_class() }}][{{ delivery_item.deliverable.id }}]" value="{{ max }}">
 				{% endif %}
 			</td>
+
 			<td>
 				<p class="form-control-static">
 					{{ delivery_item.stock }}

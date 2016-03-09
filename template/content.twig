@@ -9,6 +9,7 @@
 			<th>{{ pager.create_header('Delivery ID'|trans, 'id')|raw }}</th>
 			<th>{{ pager.create_header('Created'|trans, 'created')|raw }}</th>
 			<th>{{ pager.create_header('Courier'|trans, 'courier_object_id')|raw }}</th>
+			<th>{% trans "In stock" %}</th>
 			<th>{{ pager.create_header('Shipped'|trans, 'shipped')|raw }}</th>
 		{% endblock pager_table_head %}
 
@@ -16,6 +17,17 @@
 			<td>{{ object.id }}</td>
 			<td>{{ object.created|datetime }}</td>
 			<td>{{ object.get_courier().get_name() }}</td>
+
+			<td>
+				{% if not object.shipped %}
+					{% if object.in_stock() %}
+						<span class="label label-success">{% trans "Yes" %}</span>
+					{% else %}
+						<span class="label label-danger">{% trans "No" %}</span>
+					{% endif %}
+				{% endif %}
+			</td>
+
 			<td>
 				{% if object.shipped %}
 					<span class="label label-success">{% trans "Yes" %}</span>

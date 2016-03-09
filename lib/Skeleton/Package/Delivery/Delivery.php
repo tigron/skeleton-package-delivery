@@ -41,6 +41,26 @@ class Delivery {
 	}
 
 	/**
+	 * in stock
+	 *
+	 * @access public
+	 * @return bool public
+	 */
+	public function in_stock() {
+		if (!class_exists('\Skeleton\Package\Stock\Stock')) {
+			return true;
+		}
+
+		$overview = $this->get_overview();
+		foreach ($overview as $row) {
+			if ($row['stock'] < $row['total']-$row['shipped']) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
 	 * Set recipient
 	 *
 	 * @access public
@@ -138,6 +158,7 @@ class Delivery {
 				$result[$deliverable->id]['shipped']++;
 			}
 		}
+
 		return $result;
 	}
 

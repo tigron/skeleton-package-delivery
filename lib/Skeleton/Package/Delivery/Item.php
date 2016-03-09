@@ -47,6 +47,22 @@ class Item {
 	}
 
 	/**
+	 * Get undelivered
+	 *
+	 * @access public
+	 * @return array $delivery_items
+	 */
+	public static function get_undelivered() {
+		$db = Database::get();
+		$ids = $db->get_column('SELECT id FROM delivery_item WHERE shipment_item_id=0', []);
+		$objects = [];
+		foreach ($ids as $id) {
+			$objects[] = self::get_by_id($id);
+		}
+		return $objects;
+	}
+
+	/**
 	 * Get by delivery
 	 *
 	 * @access public

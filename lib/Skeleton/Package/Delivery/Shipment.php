@@ -145,7 +145,7 @@ class Shipment {
 		}
 
 		foreach ($this->get_overview() as $item) {
-			\Skeleton\Package\Stock\Stock::change($item['deliverable'], $item['shipped'], $this, '');
+			\Skeleton\Package\Stock\Stock::change($item['deliverable'], $item['shipped'] * (-1), $this, 'Delivery ' . $this->delivery_id);
 		}
 	}
 

@@ -117,9 +117,9 @@ class Delivery extends Crud {
 	 * @access public
 	 */
 	public function display_validate_shipment() {
+
 		$delivery_id = $_POST['delivery_id'];
 		$form = parse_str($_POST['form'], $_POST);
-
 		$shipment = new Shipment();
 		$shipment->delivery_id = $delivery_id;
 
@@ -147,20 +147,29 @@ class Delivery extends Crud {
 		}
 
 		$total_items = 0;
+		$shipment_item_errors = [];
 
 		if (isset($_POST['shipment_item'])) {
 
 			foreach ($_POST['shipment_item'] as $deliverable_object_classname => $array) {
 				foreach ($array as $deliverable_object_id => $count) {
 					$total_items += $count;
+
+					if (!class_exists('\Skeleton\Package\Stock\Stock')) {
+						continue;
+					}
+					$object = $deliverable_object_classname::get_by_id($deliverable_object_id);
+					$stock = \Skeleton\Package\Stock\Stock::get($object);
+					if ($stock < $count) {
+						$shipment_item_errors[] = 'stock_error';
+						$validated = false;
+					}
 				}
 			}
 		}
 
-		$shipment_item_errors = [];
-
 		if ($total_items <= 0) {
-			$shipment_item_errors = [ 'no products shipped' ];
+			$shipment_item_errors[] = 'no products shipped';
 			$validated = false;
 		}
 
