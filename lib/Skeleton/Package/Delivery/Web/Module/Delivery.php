@@ -44,6 +44,15 @@ class Delivery extends Crud {
 	public function get_pager() {
 		$pager = new Pager('\Skeleton\Package\Delivery\Delivery');
 		$pager->add_sort_permission('id');
+		if (isset($_POST['shipped'])) {
+			if ($_POST['shipped'] == 1) {
+				$pager->add_condition('shipped', 1);
+			} elseif ($_POST['shipped'] == 0) {
+				$pager->add_condition('shipped', 0);
+			} else {
+				$pager->clear_condition('shipped');
+			}
+		}
 		return $pager;
 	}
 

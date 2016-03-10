@@ -70,6 +70,7 @@ class Migration_20160214_225022_Init extends \Skeleton\Database\Migration {
 			  `courier_object_classname` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
 			  `courier_object_id` int(11) NOT NULL,
 			  `label_file_id` int(11) NOT NULL,
+			  `courier_data` text COLLATE utf8_unicode_ci NOT NULL,
 			  PRIMARY KEY (`id`)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 		', []);

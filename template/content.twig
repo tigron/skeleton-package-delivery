@@ -4,6 +4,27 @@
 			{% include "@skeleton-package-delivery/edit.twig" %}
 		{% endblock page_edit %}
 
+		{% block pager_filters %}
+			<div class="form-group">
+				<label class="control-label col-lg-2">{% trans "Search" %} </label>
+				<div class="controls col-lg-10">
+					<input type="text" class="form-control" name="search" value="{{ pager.get_search() }}"/>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-xs-2 control-label">{% trans "Shipped" %}</label>
+				<div class="col-xs-10">{{ pager.get_condition('shipped') }}
+					<select name="shipped" class="form-control">
+						<option value="0" {% if conditions['delivery.shipped'][0][1] == 0 %}selected{% endif %}>{% trans "No" %}</option>
+						<option value="1" {% if conditions['delivery.shipped'][0][1] == 1 %}selected{% endif %}>{% trans "Yes" %}</option>
+						<option value="-1" {% if conditions['delivery.shipped']is not defined %}selected{% endif %}>{% trans "Any" %}</option>
+					</select>
+				</div>
+			</div>
+
+		{% endblock pager_filters %}
+
 
 		{% block pager_table_head %}
 			<th>{{ pager.create_header('Delivery ID'|trans, 'id')|raw }}</th>
