@@ -218,14 +218,8 @@
 
 <script type="text/javascript">
 	function trace(shipment_id) {
-		$('#shipment-details .modal-body').load('{{ env.module.get_path() }}?action=trace&id=' + shipment_id, function() {
+		$('#shipment-details .modal-body').load('{{ env.module.get_module_path() }}?action=trace&id=' + shipment_id, function() {
 			$('#shipment-details').modal();
-		});
-	}
-
-	function print_label(shipment_id) {
-		$('#shipment-details .modal-body').load('/sales/shipment?action=print_label&id=' + shipment_id, function() {
-			// Notification could go here
 		});
 	}
 </script>

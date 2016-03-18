@@ -189,4 +189,20 @@ class Delivery {
 		return Shipment::get_by_delivery($this);
 	}
 
+	/**
+	 * Get by trigger
+	 *
+	 * @access public
+	 * @param Object $trigger
+	 * @return Delivery $delivery
+	 */
+	public static function get_by_trigger($trigger) {
+		$db = \Skeleton\Database\Database::get();
+		$id = $db->get_one('SELECT id FROM delivery WHERE trigger_object_classname=? AND trigger_object_id=?', [ get_class($trigger), $trigger->id ]);
+		if ($id === null) {
+			throw new \Exception('No Delivery found for trigger ' . get_class($trigger) . ' ' . $trigger->id);
+		}
+		return self::get_by_id($id);
+	}
+
 }

@@ -63,6 +63,22 @@ class Item {
 	}
 
 	/**
+ 	 * Get undelivered by deliverable
+	 *
+	 * @access public
+	 * @return array $delivery_items
+	 */
+	public static function get_undelivered_by_deliverable(\Skeleton\Package\Delivery\Deliverable $deliverable) {
+		$db = Database::get();
+		$ids = $db->get_column('SELECT id FROM delivery_item WHERE shipment_item_id=0 AND deliverable_object_classname=? AND deliverable_object_id=?', [ get_class($deliverable), $deliverable->id]);
+		$objects = [];
+		foreach ($ids as $id) {
+			$objects[] = self::get_by_id($id);
+		}
+		return $objects;
+	}
+
+	/**
 	 * Get by delivery
 	 *
 	 * @access public
@@ -89,7 +105,7 @@ class Item {
 	 */
 	public static function get_by_delivery_deliverable(Delivery $delivery, \Skeleton\Package\Delivery\Deliverable $deliverable) {
 		$db = Database::get();
-		$ids = $db->get_column('SELECT id FROm delivery_item WHERE delivery_id=? AND deliverable_object_classname=? AND deliverable_object_id=?', [ $delivery->id, get_class($deliverable), $deliverable->id ]);
+		$ids = $db->get_column('SELECT id FROM delivery_item WHERE delivery_id=? AND deliverable_object_classname=? AND deliverable_object_id=?', [ $delivery->id, get_class($deliverable), $deliverable->id ]);
 		$objects = [];
 		foreach ($ids as $id) {
 			$objects[] = self::get_by_id($id);
