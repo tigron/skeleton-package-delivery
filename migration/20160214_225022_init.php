@@ -69,6 +69,7 @@ class Migration_20160214_225022_Init extends \Skeleton\Database\Migration {
 			  `vat` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
 			  `courier_object_classname` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
 			  `courier_object_id` int(11) NOT NULL,
+			  `weight` decimal(10,3) NOT NULL,
 			  `label_file_id` int(11) NOT NULL,
 			  `courier_data` text COLLATE utf8_unicode_ci NOT NULL,
 			  PRIMARY KEY (`id`)
@@ -80,6 +81,7 @@ class Migration_20160214_225022_Init extends \Skeleton\Database\Migration {
 			  `id` int(11) NOT NULL AUTO_INCREMENT,
 			  `shipment_id` int(11) NOT NULL,
 			  `delivery_item_id` int(11) NOT NULL,
+			  `weight` decimal(10,3) NOT NULL,
 			  PRIMARY KEY (`id`)
 			) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 		', []);

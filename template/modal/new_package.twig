@@ -1,4 +1,4 @@
-{% extends "_default/modal.base.twig" %}
+{% extends "@skeleton-package-delivery/modal.base.twig" %}
 
 {% block header %}{% trans "Create new package" %}{% endblock header %}
 
@@ -171,62 +171,85 @@
 		<thead>
 			<tr>
 				<th>{% trans "Product to ship" %}</th>
-				<th>{% trans "Amount" %}</th>
-				<th>{% trans "Already shipped" %}</th>
-				<th>{% trans "To ship" %}</th>
-				<th>{% trans "Ship" %}</th>
-				<th>{% trans "Stock" %}</th>
+				<th class="text-right">{% trans "Amount" %}</th>
+				<th class="text-right">{% trans "Shipped" %}</th>
+				<th class="text-right">{% trans "To ship" %}</th>
+				<th class="text-right">{% trans "Ship" %}</th>
+				<th class="text-right">{% trans "Stock" %}</th>
+				<th class="text-right">{% trans "Weight" %}</th>
+				<th class="text-right">{% trans "Total Weight" %}</th>
 			</tr>
 		</thead>
 		<tbody>
+		{% set total_weight = 0 %}
 		{% for delivery_item in delivery.get_overview() %}
-		{% set to_ship = delivery_item.total-delivery_item.shipped %}
-		<tr {% if delivery_item.stock < to_ship %}class="danger"{% endif %}>
-			<td>
-				<p class="form-control-static">
-					{{ delivery_item.deliverable.get_name() }}
-				</p>
-			</td>
-			<td>
-				<p class="form-control-static">
-					{{ delivery_item.total }}
-				</p>
-			</td>
-			<td>
-				<p class="form-control-static">
-					{{ delivery_item.shipped }}
-				</p>
-			</td>
+			{% set to_ship = delivery_item.total-delivery_item.shipped %}
 
-			<td>
-				<p class="form-control-static">
-					{{ delivery_item.total-delivery_item.shipped }}
-				</p>
-			</td>
+			<tr {% if delivery_item.stock < to_ship %}class="danger"{% endif %}>
+				<td>
+					<p class="form-control-static">
+						{{ delivery_item.deliverable.get_name() }}
+					</p>
+				</td>
+				<td class="text-right">
+					<p class="form-control-static">
+						{{ delivery_item.total }}
+					</p>
+				</td>
+				<td class="text-right">
+					<p class="form-control-static">
+						{{ delivery_item.shipped }}
+					</p>
+				</td>
 
-			{% if to_ship > delivery_item.stock %}
-				{% set max = delivery_item.stock %}
-			{% else %}
-				{% set max = to_ship %}
-			{% endif %}
+				<td class="text-right">
+					<p class="form-control-static">
+						{{ delivery_item.total-delivery_item.shipped }}
+					</p>
+				</td>
 
-			<td>
-				{% if to_ship == 0 %}
-					<em>{% trans "Already shipped" %}</em>
+				{% if to_ship > delivery_item.stock %}
+					{% set max = delivery_item.stock %}
 				{% else %}
-				<input type="number" max="{{ max }}" min="0" class="form-control has-error" name="shipment_item[{{ delivery_item.deliverable|get_class() }}][{{ delivery_item.deliverable.id }}]" value="{{ max }}">
+					{% set max = to_ship %}
 				{% endif %}
-			</td>
+				{% set total_weight = total_weight + (max*delivery_item.deliverable.get_weight()) %}
 
-			<td>
-				<p class="form-control-static">
-					{{ delivery_item.stock }}
-				</p>
-			</td>
+				<td class="text-right" {% if to_ship > 0 %}style="width: 80px;"{% endif %}>
+					{% if to_ship == 0 %}
+						<em>{% trans "Already shipped" %}</em>
+					{% else %}
+					<input type="number" max="{{ max }}" min="0" class="form-control to_ship" name="shipment_item[{{ delivery_item.deliverable|get_class() }}][{{ delivery_item.deliverable.id }}][to_ship]" value="{{ max }}" onchange="update_total();">
+					{% endif %}
+				</td>
 
-		</tr>
+				<td class="text-right">
+					<p class="form-control-static">
+						{{ delivery_item.stock }}
+					</p>
+				</td>
+				<td class="text-right" style="width: 130px">
+					<div class="input-group">
+						<input type="text" class="form-control weight" name="shipment_item[{{ delivery_item.deliverable|get_class() }}][{{ delivery_item.deliverable.id }}][weight]" value="{{ delivery_item.deliverable.get_weight() }}" onchange="update_total();"/>
+						<div class="input-group-addon">kg</div>
+					</div>
+				</td>
+
+				<td class="text-right" style="width: 130px;">
+					<p class="form-control-static">{{ max*delivery_item.deliverable.get_weight() }} kg</p>
+				</td>
+			</tr>
 		{% endfor %}
-		</tbody>
+			<tr>
+				<td colspan="7" class="text-right"><p class="form-control-static"><strong>{% trans "Total weight" %}</strong></p></td>
+				<td>
+					<div class="input-group">
+						<input type="text" class="form-control total_weight" name="shipment[weight]" value="{{ total_weight }}"/>
+						<div class="input-group-addon">kg</div>
+					</div>
+				</td>
+			</tr>
+		</body>
 	</table>
 </form>
 
@@ -241,6 +264,16 @@
 			$('#input_manual').show();
 		}
 	});
+
+	function update_total() {
+		total_weight = 0;
+		$('#shipment_form tr').each(function() {
+			if ($(this).find('.to_ship').length) {
+				total_weight += parseInt($(this).find('.to_ship').val()) * parseFloat($(this).find('.weight').val());
+			}
+		});
+		$('.total_weight').val(total_weight.toFixed(3));
+	}
 
 
 	$('#shipment_form').on('submit', function(event) {

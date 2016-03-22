@@ -86,15 +86,9 @@ class Shipment {
 	public function get_weight() {
 		if (!isset($this->id)) {
 			// We return a dummy number to allow validation
-			return 1000;
+			return 1;
 		}
-		$items = $this->get_shipment_items();
-		$weight = 0;
-		foreach ($items as $item) {
-			$delivery_item = \Skeleton\Package\Delivery\Item::get_by_id($item->delivery_item_id);
-			$weight += $delivery_item->get_deliverable()->get_weight();
-		}
-		return $weight;
+		return $this->weight;
 	}
 
 

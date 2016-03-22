@@ -88,7 +88,7 @@ class Delivery extends Crud {
 
 
 		foreach ($_POST['shipment_item'] as $deliverable_object_classname => $array) {
-			foreach ($array as $deliverable_object_id => $count) {
+			foreach ($array as $deliverable_object_id => $values) {
 				$deliverable = $deliverable_object_classname::get_by_id($deliverable_object_id);
 
 				$delivery_items = \Skeleton\Package\Delivery\Item::get_by_delivery_deliverable($delivery, $deliverable);
@@ -99,15 +99,16 @@ class Delivery extends Crud {
 					}
 				}
 
-				if (count($delivery_items) < $count) {
+				if (count($delivery_items) < $values['to_ship']) {
 					throw new \Exception('This should not happen, more items are requested for shipment than allowed');
 				}
 
-				for ($i=1; $i<=$count; $i++) {
+				for ($i=1; $i<=$values['to_ship']; $i++) {
 					$delivery_item = array_shift($delivery_items);
 					$shipment_item = new \Skeleton\Package\Delivery\Shipment\Item();
 					$shipment_item->delivery_item_id = $delivery_item->id;
 					$shipment_item->shipment_id = $shipment->id;
+					$shipment_item->weight = $values['weight'];
 					$shipment_item->save();
 					$delivery_item->shipment_item_id = $shipment_item->id;
 					$delivery_item->save();
@@ -161,15 +162,15 @@ class Delivery extends Crud {
 		if (isset($_POST['shipment_item'])) {
 
 			foreach ($_POST['shipment_item'] as $deliverable_object_classname => $array) {
-				foreach ($array as $deliverable_object_id => $count) {
-					$total_items += $count;
+				foreach ($array as $deliverable_object_id => $values) {
+					$total_items += $values['to_ship'];
 
 					if (!class_exists('\Skeleton\Package\Stock\Stock')) {
 						continue;
 					}
 					$object = $deliverable_object_classname::get_by_id($deliverable_object_id);
 					$stock = \Skeleton\Package\Stock\Stock::get($object);
-					if ($stock < $count) {
+					if ($stock < $values['to_ship']) {
 						$shipment_item_errors[] = 'stock_error';
 						$validated = false;
 					}
