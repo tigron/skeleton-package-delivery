@@ -43,6 +43,8 @@
 				{% if not object.shipped %}
 					{% if object.in_stock() %}
 						<span class="label label-success">{% trans "Yes" %}</span>
+					{% elseif object.partly_in_stock() %}
+						<span class="label label-warning">{% trans "Partly" %}</span>
 					{% else %}
 						<span class="label label-danger">{% trans "No" %}</span>
 					{% endif %}

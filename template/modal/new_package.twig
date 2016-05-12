@@ -219,7 +219,7 @@
 					{% if to_ship == 0 %}
 						<em>{% trans "Already shipped" %}</em>
 					{% else %}
-					<input type="number" max="{{ max }}" min="0" class="form-control to_ship" name="shipment_item[{{ delivery_item.deliverable|get_class() }}][{{ delivery_item.deliverable.id }}][to_ship]" value="{{ max }}" onchange="update_total();">
+					<input type="number" max="{{ max }}" min="0" class="form-control to_ship" name="shipment_item[{{ delivery_item.deliverable|get_class() }}][{{ delivery_item.deliverable.id }}][to_ship]" value="{{ max }}" onchange="update_total();" onblur="check_max($(this));">
 					{% endif %}
 				</td>
 
@@ -275,6 +275,11 @@
 		$('.total_weight').val(total_weight.toFixed(3));
 	}
 
+	function check_max(obj) {
+		if (obj.val() > obj.prop('max')) {
+			obj.val(obj.prop('max'));
+		}
+	}
 
 	$('#shipment_form').on('submit', function(event) {
 		event.preventDefault();

@@ -31,6 +31,19 @@
 							<span class="label label-danger">{% trans "No" %}</span>
 						{% endif %}
 					</dd>
+
+					{% if not object.shipped %}
+						<dt>{% trans "In stock" %}</dt>
+						<dd>
+							{% if object.in_stock() %}
+								<span class="label label-success">{% trans "Yes" %}</span>
+							{% elseif object.partly_in_stock() %}
+								<span class="label label-warning">{% trans "Partly" %}</span>
+							{% else %}
+								<span class="label label-danger">{% trans "No" %}</span>
+							{% endif %}
+						</dd>
+					{% endif %}
 				</dl>
 			</div>
 		</div>

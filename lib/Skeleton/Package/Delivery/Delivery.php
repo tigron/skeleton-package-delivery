@@ -61,6 +61,26 @@ class Delivery {
 	}
 
 	/**
+	 * Partly in stock
+	 *
+	 * @access public
+	 * @return bool public
+	 */
+	public function partly_in_stock() {
+		if (!class_exists('\Skeleton\Package\Stock\Stock')) {
+			return true;
+		}
+
+		$overview = $this->get_overview();
+		foreach ($overview as $row) {
+			if ($row['stock'] > 0 AND ($row['total']-$row['shipped'] > 0)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Set recipient
 	 *
 	 * @access public
@@ -177,6 +197,27 @@ class Delivery {
 		}
 		$this->shipped = $shipped;
 		$this->save();
+	}
+
+	/**
+	 * Is the delivery partially shipped
+	 *
+	 * @access public
+	 * @return bool $partially_shipped
+	 */
+	public function is_partially_shipped() {
+		if ($this->shipped === true) {
+			return false;
+		}
+
+		$partially_shipped = false;
+		foreach ($this->get_delivery_items() as $item) {
+			if ($item->shipment_item_id > 0) {
+				$partially_shipped = true;
+			}
+		}
+
+		return $partially_shipped;
 	}
 
 	/**

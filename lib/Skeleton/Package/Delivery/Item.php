@@ -50,7 +50,7 @@ class Item {
 	 * Get undelivered
 	 *
 	 * @access public
-	 * @return array $delivery_items
+	 * @return array $undelivery_items
 	 */
 	public static function get_undelivered() {
 		$db = Database::get();
@@ -66,7 +66,7 @@ class Item {
  	 * Get undelivered by deliverable
 	 *
 	 * @access public
-	 * @return array $delivery_items
+	 * @return array $undelivery_items
 	 */
 	public static function get_undelivered_by_deliverable(\Skeleton\Package\Delivery\Deliverable $deliverable) {
 		$db = Database::get();
@@ -76,6 +76,19 @@ class Item {
 			$objects[] = self::get_by_id($id);
 		}
 		return $objects;
+	}
+
+	/**
+ 	 * Get undelivered count by deliverable
+	 *
+	 * @access public
+	 * @return int $count_undelivery_items
+	 */
+	public static function get_count_undelivered_by_deliverable(\Skeleton\Package\Delivery\Deliverable $deliverable) {
+		$db = Database::get();
+		$count = $db->get_one('SELECT COUNT(id) FROM delivery_item WHERE shipment_item_id=0 AND deliverable_object_classname=? AND deliverable_object_id=?', [ get_class($deliverable), $deliverable->id]);
+
+		return $count;
 	}
 
 	/**
