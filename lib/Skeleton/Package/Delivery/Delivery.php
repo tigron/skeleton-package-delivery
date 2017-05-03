@@ -47,13 +47,9 @@ class Delivery {
 	 * @return bool public
 	 */
 	public function in_stock() {
-		if (!class_exists('\Skeleton\Package\Stock\Stock')) {
-			return true;
-		}
-
 		$overview = $this->get_overview();
 		foreach ($overview as $row) {
-			if ($row['stock'] < $row['total']-$row['shipped']) {
+			if (isset($row['stock']) AND $row['stock'] < $row['total']-$row['shipped']) {
 				return false;
 			}
 		}
@@ -168,7 +164,7 @@ class Delivery {
 					'shipped' => 0,
 					'total' => 0
 				];
-				if (class_exists('\Skeleton\Package\Stock\Stock')) {
+				if ($deliverable->has_stock()) {
 					$result[$deliverable->id]['stock'] = \Skeleton\Package\Stock\Stock::get($deliverable);
 				}
 			}

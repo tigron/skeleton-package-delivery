@@ -185,7 +185,7 @@
 		{% for delivery_item in delivery.get_overview() %}
 			{% set to_ship = delivery_item.total-delivery_item.shipped %}
 
-			<tr {% if delivery_item.stock < to_ship %}class="danger"{% endif %}>
+			<tr {% if not delivery_item.stock is empty and delivery_item.stock < to_ship %}class="danger"{% endif %}>
 				<td>
 					<p class="form-control-static">
 						{{ delivery_item.deliverable.get_name() }}
@@ -208,7 +208,7 @@
 					</p>
 				</td>
 
-				{% if to_ship > delivery_item.stock %}
+				{% if delivery_item.stock is not empty and to_ship > delivery_item.stock %}
 					{% set max = delivery_item.stock %}
 				{% else %}
 					{% set max = to_ship %}

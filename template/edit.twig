@@ -177,7 +177,7 @@
 								<dt>{% trans "Handling PDF" %}</dt>
 								<dd>
 									<i class="fa fa-file-pdf-o"></i>
-									<a href="{{ env.module.get_module_path() }}?id={{ shipment.id }}&action=label">{% trans "Label" %}</a>
+									<a href="{{ env.module.get_module_path() }}?shipment_id={{ shipment.id }}&action=label">{% trans "Label" %}</a>
 								</dd>
 							{% endif %}
 
@@ -232,7 +232,7 @@
 
 <script type="text/javascript">
 	function trace(shipment_id) {
-		$('#shipment-details .modal-body').load('{{ env.module.get_module_path() }}?action=trace&id=' + shipment_id, function() {
+		$('#shipment-details .modal-body').load('{{ env.module.get_module_path() }}?action=trace&shipment_id=' + shipment_id, function() {
 			$('#shipment-details').modal();
 		});
 	}

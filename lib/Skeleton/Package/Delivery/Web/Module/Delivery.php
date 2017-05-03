@@ -164,15 +164,13 @@ class Delivery extends Crud {
 			foreach ($_POST['shipment_item'] as $deliverable_object_classname => $array) {
 				foreach ($array as $deliverable_object_id => $values) {
 					$total_items += $values['to_ship'];
-
-					if (!class_exists('\Skeleton\Package\Stock\Stock')) {
-						continue;
-					}
 					$object = $deliverable_object_classname::get_by_id($deliverable_object_id);
-					$stock = \Skeleton\Package\Stock\Stock::get($object);
-					if ($stock < $values['to_ship']) {
-						$shipment_item_errors[] = 'stock_error';
-						$validated = false;
+					if ($object->has_stock()) {
+						$stock = \Skeleton\Package\Stock\Stock::get($object);
+						if ($stock < $values['to_ship']) {
+							$shipment_item_errors[] = 'stock_error';
+							$validated = false;
+						}
 					}
 				}
 			}
@@ -201,7 +199,7 @@ class Delivery extends Crud {
 		$this->template = false;
 		$template = Template::Get();
 
-		$shipment = Shipment::get_by_id($_GET['id']);
+		$shipment = Shipment::get_by_id($_GET['shipment_id']);
 		$template->assign('shipment', $shipment);
 
 		$trace = $shipment->get_courier()->trace($shipment);
@@ -217,7 +215,7 @@ class Delivery extends Crud {
 	 */
 	public function display_label() {
 		$this->template = false;
-		$shipment = Shipment::get_by_id($_GET['id']);
+		$shipment = Shipment::get_by_id($_GET['shipment_id']);
 		$template = Template::Get();
 
 		$file = $shipment->get_courier()->get_label($shipment);
