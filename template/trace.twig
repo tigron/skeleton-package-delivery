@@ -3,7 +3,7 @@
 		<label class="col-xs-3 control-label">{% trans "UPS Label" %}</label>
 		<div class="col-xs-9">
 			<p class="form-control-static">
-				<a href="{{ env.module.get_module_path() }}?action=label&id={{ shipment.id }}"><i class="fa fa-barcode"></i> {% trans "Label" %}</a>
+				<a href="{{ env.module.get_module_path() }}?action=label&shipment_id={{ shipment.id }}"><i class="fa fa-barcode"></i> {% trans "Label" %}</a>
 			</p>
 		</div>
 	</div>
