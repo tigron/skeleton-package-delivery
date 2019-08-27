@@ -105,7 +105,7 @@ class Shipment {
 
 		$result = [];
 		foreach ($items as $item) {
-			$delivery_item = \Skeleton\Package\Delivery\item::get_by_id($item->delivery_item_id);
+			$delivery_item = \Skeleton\Package\Delivery\Item::get_by_id($item->delivery_item_id);
 			$deliverable = $delivery_item->get_deliverable();
 			if (!isset($result[$deliverable->id])) {
 				$result[$deliverable->id] = [
@@ -176,11 +176,9 @@ class Shipment {
 
 		$errors = array_merge($errors, $this->get_courier()->validate_shipment($this));
 
-
 		if (isset($this->details['city']) AND strlen($this->details['city']) < 2) {
 			$errors['city'] = 'city';
 		}
-
 		if (count($errors) > 0) {
 			return false;
 		}

@@ -63,58 +63,8 @@ class Delivery extends Crud {
 	 */
 	public function display_add_shipment() {
 		$delivery = \Skeleton\Package\Delivery\Delivery::get_by_id($_GET['id']);
-		$shipment = new Shipment();
-		$shipment->delivery_id = $delivery->id;
 
-
-		if ($_POST['address_input'] == 'manual') {
-			unset($_POST['shipment']['street']);
-			unset($_POST['shipment']['housenumber']);
-		} else {
-			unset($_POST['shipment']['line1']);
-			unset($_POST['shipment']['line2']);
-			unset($_POST['shipment']['line3']);
-		}
-
-		if (isset($_POST['shipment']['courier'])) {
-			list($courier_object_classname, $courier_object_id) = explode('/', $_POST['shipment']['courier']);
-			$_POST['shipment']['courier_object_classname'] = $courier_object_classname;
-			$_POST['shipment']['courier_object_id'] = $courier_object_id;
-			unset($_POST['shipment']['courier']);
-		}
-
-		$shipment->load_array($_POST['shipment']);
-		$shipment->save();
-
-
-		foreach ($_POST['shipment_item'] as $deliverable_object_classname => $array) {
-			foreach ($array as $deliverable_object_id => $values) {
-				$deliverable = $deliverable_object_classname::get_by_id($deliverable_object_id);
-
-				$delivery_items = \Skeleton\Package\Delivery\Item::get_by_delivery_deliverable($delivery, $deliverable);
-				// Remove the delivery_items that are already shipped
-				foreach ($delivery_items as $key => $delivery_item) {
-					if ($delivery_item->shipment_item_id != 0) {
-						unset($delivery_items[$key]);
-					}
-				}
-
-				if (count($delivery_items) < $values['to_ship']) {
-					throw new \Exception('This should not happen, more items are requested for shipment than allowed');
-				}
-
-				for ($i=1; $i<=$values['to_ship']; $i++) {
-					$delivery_item = array_shift($delivery_items);
-					$shipment_item = new \Skeleton\Package\Delivery\Shipment\Item();
-					$shipment_item->delivery_item_id = $delivery_item->id;
-					$shipment_item->shipment_id = $shipment->id;
-					$shipment_item->weight = $values['weight'];
-					$shipment_item->save();
-					$delivery_item->shipment_item_id = $shipment_item->id;
-					$delivery_item->save();
-				}
-			}
-		}
+		$shipment = Shipment::get_by_id($_POST['shipment_id']);
 		$shipment->handle();
 		$delivery->check_shipped();
 
@@ -127,9 +77,11 @@ class Delivery extends Crud {
 	 * @access public
 	 */
 	public function display_validate_shipment() {
-
 		$delivery_id = $_POST['delivery_id'];
 		$form = parse_str($_POST['form'], $_POST);
+
+		$delivery = \Skeleton\Package\Delivery\Delivery::get_by_id($delivery_id);
+
 		$shipment = new Shipment();
 		$shipment->delivery_id = $delivery_id;
 
@@ -162,15 +114,38 @@ class Delivery extends Crud {
 		if (isset($_POST['shipment_item'])) {
 
 			foreach ($_POST['shipment_item'] as $deliverable_object_classname => $array) {
-				foreach ($array as $deliverable_object_id => $values) {
-					$total_items += $values['to_ship'];
-					$object = $deliverable_object_classname::get_by_id($deliverable_object_id);
-					if ($object->has_stock()) {
-						$stock = \Skeleton\Package\Stock\Stock::get($object);
-						if ($stock < $values['to_ship']) {
-							$shipment_item_errors[] = 'stock_error';
-							$validated = false;
+
+				foreach ($array as $deliverable_object_id => $data) {
+					$deliverable = $deliverable_object_classname::get_by_id($deliverable_object_id);
+
+					$delivery_items = \Skeleton\Package\Delivery\Item::get_by_delivery_deliverable($delivery, $deliverable);
+					// Remove the delivery_items that are already shipped
+					foreach ($delivery_items as $key => $delivery_item) {
+						if ($delivery_item->shipment_item_id != 0) {
+							unset($delivery_items[$key]);
 						}
+					}
+
+					if (!isset($data['to_ship'])) {
+						$data['to_ship'] = 0;
+					}
+
+					if (count($delivery_items) < $data['to_ship']) {
+						throw new Exception('This should not happen, more items are requested for shipment than allowed');
+					}
+
+					$total_items += $data['to_ship'];
+
+					for ($i=1; $i<=$data['to_ship']; $i++) {
+						$delivery_item = array_shift($delivery_items);
+
+						$shipment_item = new \Skeleton\Package\Delivery\Shipment\Item();
+						$shipment_item->delivery_item_id = $delivery_item->id;
+						$shipment_item->shipment_id = $shipment->id;
+						$shipment_item->weight = $data['weight'];
+						$shipment_item->save();
+						$delivery_item->shipment_item_id = $shipment_item->id;
+						$delivery_item->save();
 					}
 				}
 			}
@@ -181,11 +156,29 @@ class Delivery extends Crud {
 			$validated = false;
 		}
 
+		/**
+		 * If not validated, cleanup
+		 */
+		if (!$validated) {
+			$shipment_items = $shipment->get_shipment_items();
+			foreach ($shipment_items as $shipment_item) {
+				$delivery_item = $shipment_item->delivery_item;
+				$delivery_item->shipment_item_id = 0;
+				$delivery_item->save();
+			}
+			$shipment->delete();
+		}
+
 		$result = [
 			'shipment_errors' => $shipment_errors,
 			'shipment_item_errors' => $shipment_item_errors,
 			'validated' => $validated
 		];
+
+		if ($validated) {
+			$result['shipment_id'] = $shipment->id;
+		}
+
 		echo json_encode($result);
 		$this->template = false;
 	}

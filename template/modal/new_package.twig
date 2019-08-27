@@ -5,6 +5,7 @@
 {% block body %}
 	{% set delivery_recipient = delivery.get_delivery_recipient() %}
 <form action="{{ env.module.get_module_path() }}?action=add_shipment&id={{ delivery.id }}" method="post" class="form-horizontal form-condensed" id="shipment_form">
+	<input type="hidden" name="shipment_id" value="" />
 
 	<div class="alert alert-danger hide" id="delivery-validation-error">
 		{% trans "Not all fields are filled in correctly." %} {% trans "Please review the errors and retry." %}
@@ -300,8 +301,10 @@
 				$.each(data.shipment_item_errors, function(key, value) {
 					$('input[name^=shipment_item]').parents('td').addClass('has-error');
 				});
-				$('#delivery-validation-error').removeClass('hide');
+				$('#validation-error').show();
+				$('#shipment_form').parents('.modal').find('.btn-primary').prop('disabled', false);
 			} else {
+				$('input[name=shipment_id]').val( data.shipment_id );
 				$('#shipment_form').unbind('submit').submit();
 			}
 		}, 'json');
