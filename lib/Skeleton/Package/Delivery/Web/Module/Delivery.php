@@ -106,12 +106,14 @@ class Delivery extends Crud {
 
 		if (!$shipment->validate($shipment_errors)) {
 			$validated = false;
+		} else {
+			$shipment->save();
 		}
 
 		$total_items = 0;
 		$shipment_item_errors = [];
 
-		if (isset($_POST['shipment_item'])) {
+		if (isset($_POST['shipment_item']) && $validated) {
 
 			foreach ($_POST['shipment_item'] as $deliverable_object_classname => $array) {
 
