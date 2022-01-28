@@ -1,51 +1,51 @@
-{% extends "@skeleton-package-delivery/modal.base.twig" %}
+{% extends "@skeleton-package-delivery/bootstrap5/modal.base.twig" %}
 
 {% block header %}{% trans "Create new package" %}{% endblock header %}
 
 {% block body %}
 	{% set delivery_recipient = delivery.get_delivery_recipient() %}
-<form action="{{ env.module.get_module_path() }}?action=add_shipment&id={{ delivery.id }}" method="post" class="form-horizontal form-condensed" id="shipment_form">
+<form action="{{ env.module.get_module_path() }}?action=add_shipment&id={{ delivery.id }}" method="post" id="shipment_form">
 	<input type="hidden" name="shipment_id" value="" />
 
-	<div class="alert alert-danger hide" id="delivery-validation-error">
+	<div class="alert alert-danger d-none" id="delivery-validation-error">
 		{% trans "Not all fields are filled in correctly." %} {% trans "Please review the errors and retry." %}
 		<ul>
-			<li class="hide error_firstname error_lastname">{% trans "The length of firstname and lastname combined (+space) cannot be longer than 35 characters." %}</li>
-			<li class="hide error_company">{% trans "The length of the company name cannot be longer than 35 characters" %}</li>
-			<li class="hide error_firstname error_lastname error_company">{% trans "You should at least fill in company or firstname and lastname." %}</li>
+			<li class="d-none error_firstname error_lastname">{% trans "The length of firstname and lastname combined (+space) cannot be longer than 35 characters." %}</li>
+			<li class="d-none error_company">{% trans "The length of the company name cannot be longer than 35 characters" %}</li>
+			<li class="d-none error_firstname error_lastname error_company">{% trans "You should at least fill in company or firstname and lastname." %}</li>
 
-			<li class="hide error_email">{% trans "The email address cannot be longer than 35 characters" %}</li>
-			<li class="hide error_street">{% trans "The length of street and housenumber combined (+space) cannot be longer than 35 characters" %}</li>
-			<li class="hide error_ups_message"></li>
+			<li class="d-none error_email">{% trans "The email address cannot be longer than 35 characters" %}</li>
+			<li class="d-none error_street">{% trans "The length of street and housenumber combined (+space) cannot be longer than 35 characters" %}</li>
+			<li class="d-none error_ups_message"></li>
 		</ul>
 	</div>
 
 	<div class="row">
-		<div class="col-xs-6">
-			<div class="form-group">
-				<label class="col-xs-3 control-label">{% trans "Company" %}</label>
-				<div class="col-xs-9">
+		<div class="col-sm-6">
+			<div class="row mb-1">
+				<label class="col-sm-3 col-form-label">{% trans "Company" %}</label>
+				<div class="col-sm-9">
 					<input type="text" class="form-control" name="shipment[company]" value="{{ delivery_recipient.get_company() }}" />
 				</div>
 			</div>
 
-			<div class="form-group">
-				<label class="col-xs-3 control-label">{% trans "First name" %}</label>
-				<div class="col-xs-9">
+			<div class="row mb-1">
+				<label class="col-sm-3 col-form-label">{% trans "First name" %}</label>
+				<div class="col-sm-9">
 					<input type="text" class="form-control" name="shipment[firstname]" value="{{ delivery_recipient.get_firstname() }}" placeholder="{% trans "First name" %}"/>
 				</div>
 			</div>
 
-			<div class="form-group">
-				<label class="col-xs-3 control-label">{% trans "Last name" %}</label>
-				<div class="col-xs-9">
+			<div class="row mb-1">
+				<label class="col-sm-3 col-form-label">{% trans "Last name" %}</label>
+				<div class="col-sm-9">
 					<input type="text" class="form-control" name="shipment[lastname]" value="{{ delivery_recipient.get_lastname() }}" placeholder="{% trans "Last name" %}"/>
 				</div>
 			</div>
 
-			<div class="form-group">
-				<label class="col-xs-3 control-label">{% trans "Address input" %}</label>
-				<div class="col-xs-9">
+			<div class="row mb-1">
+				<label class="col-sm-3 col-form-label">{% trans "Address input" %}</label>
+				<div class="col-sm-9">
 					<div class="radio">
 						<label>
 							<input type="radio" name="address_input" value="structured" checked>
@@ -62,56 +62,56 @@
 			</div>
 
 			<div id="input_structured">
-				<div class="form-group">
-					<label class="col-xs-3 control-label">{% trans "Street" %}</label>
-					<div class="col-xs-9">
+				<div class="row mb-1">
+					<label class="col-sm-3 col-form-label">{% trans "Street" %}</label>
+					<div class="col-sm-9">
 						<input type="text" class="form-control" name="shipment[street]" value="{{ delivery_recipient.get_street() }}" placeholder="{% trans "Street" %}" />
 					</div>
 				</div>
 
-				<div class="form-group">
-					<label class="col-xs-3 control-label">{% trans "Housenumber" %}</label>
-					<div class="col-xs-9">
+				<div class="row mb-1">
+					<label class="col-sm-3 col-form-label">{% trans "Housenumber" %}</label>
+					<div class="col-sm-9">
 						<input type="text" class="form-control" name="shipment[housenumber]" value="{{ delivery_recipient.get_housenumber() }}" placeholder="{% trans "Housenumber" %}" />
 					</div>
 				</div>
 			</div>
 
 			<div id="input_manual" class="hide">
-				<div class="form-group">
-					<label class="col-xs-3 control-label">{% trans "Line 1" %}</label>
-					<div class="col-xs-9"><input type="text" class="form-control" name="shipment[line1]" value="{{ delivery_recipient.get_street() }} {{ delivery_recipient.get_housenumber() }}"/></div>
+				<div class="row mb-1">
+					<label class="col-sm-3 col-form-label">{% trans "Line 1" %}</label>
+					<div class="col-sm-9"><input type="text" class="form-control" name="shipment[line1]" value="{{ delivery_recipient.get_street() }} {{ delivery_recipient.get_housenumber() }}"/></div>
 				</div>
 
-				<div class="form-group">
-					<label class="col-xs-3 control-label">{% trans "Line 2" %}</label>
-					<div class="col-xs-9"><input type="text" class="form-control" name="shipment[line2]" /></div>
+				<div class="row mb-1">
+					<label class="col-sm-3 col-form-label">{% trans "Line 2" %}</label>
+					<div class="col-sm-9"><input type="text" class="form-control" name="shipment[line2]" /></div>
 				</div>
 
-				<div class="form-group">
-					<label class="col-xs-3 control-label">{% trans "Line 3" %}</label>
-					<div class="col-xs-9"><input type="text" class="form-control" name="shipment[line3]" /></div>
+				<div class="row mb-1">
+					<label class="col-sm-3 col-form-label">{% trans "Line 3" %}</label>
+					<div class="col-sm-9"><input type="text" class="form-control" name="shipment[line3]" /></div>
 				</div>
 
 			</div>
 
-			<div class="form-group">
-				<label class="col-xs-3 control-label">{% trans "Zipcode" %}</label>
-				<div class="col-xs-9">
+			<div class="row mb-1">
+				<label class="col-sm-3 col-form-label">{% trans "Zipcode" %}</label>
+				<div class="col-sm-9">
 					<input type="text" class="form-control" name="shipment[zip]" value="{{ delivery_recipient.get_zipcode() }}" placeholder="{% trans "Zipcode" %}"/>
 				</div>
 			</div>
 
-			<div class="form-group">
-				<label class="col-xs-3 control-label">{% trans "City" %}</label>
-				<div class="col-xs-9">
+			<div class="row mb-1">
+				<label class="col-sm-3 col-form-label">{% trans "City" %}</label>
+				<div class="col-sm-9">
 					<input type="text" class="form-control" name="shipment[city]" value="{{ delivery_recipient.get_city() }}" placeholder="{% trans "City" %}"/>
 				</div>
 			</diV>
 
-			<div class="form-group {% if errors.country_id is defined %}has-error{% endif %}">
-				<label class="col-xs-3 control-label">{% trans "Country" %}</label>
-				<div class="col-xs-9">
+			<div class="row mb-1 {% if errors.country_id is defined %}has-error{% endif %}">
+				<label class="col-sm-3 col-form-label">{% trans "Country" %}</label>
+				<div class="col-sm-9">
 					<select name="shipment[country_id]" class="form-control">
 						{% for country in countries %}
 							<option value="{{ country.id }}" {% if country.get_iso2() == delivery_recipient.get_country().iso2 %}selected{% endif %}>{{ country.name }}</option>
@@ -121,39 +121,39 @@
 			</div>
 		</div>
 
-		<div class="col-xs-6">
+		<div class="col-sm-6">
 
-			<div class="form-group">
-				<label class="col-xs-3 control-label">{% trans "Phone" %}</label>
-				<div class="col-xs-9">
+			<div class="row mb-1">
+				<label class="col-sm-3 col-form-label">{% trans "Phone" %}</label>
+				<div class="col-sm-9">
 					<input type="text" class="form-control" name="shipment[phone]" value="{{ delivery_recipient.get_phone() }}" placeholder="{% trans "Phone" %}"/>
 				</div>
 			</div>
 
-			<div class="form-group">
-				<label class="col-xs-3 control-label">{% trans "Fax" %}</label>
-				<div class="col-xs-9">
+			<div class="row mb-1">
+				<label class="col-sm-3 col-form-label">{% trans "Fax" %}</label>
+				<div class="col-sm-9">
 					<input type="text" class="form-control" name="shipment[fax]" value="{{ delivery_recipient.get_fax() }}" placeholder="{% trans "Fax" %}"/>
 				</div>
 			</div>
 
-			<div class="form-group">
-				<label class="col-xs-3 control-label">{% trans "Email" %}</label>
-				<div class="col-xs-9">
+			<div class="row mb-1">
+				<label class="col-sm-3 col-form-label">{% trans "Email" %}</label>
+				<div class="col-sm-9">
 					<input type="text" class="form-control" name="shipment[email]" value="{{ delivery_recipient.get_email() }}" placeholder="{% trans "Email" %}"/>
 				</div>
 			</div>
 
-			<div class="form-group">
-				<label class="col-xs-3 control-label">{% trans "VAT" %}</label>
-				<div class="col-xs-9">
+			<div class="row mb-1">
+				<label class="col-sm-3 col-form-label">{% trans "VAT" %}</label>
+				<div class="col-sm-9">
 					<input type="text" class="form-control" name="shipment[vat]" value="{{ delivery_recipient.get_vat() }}" placeholder="{% trans "Vat" %}"/>
 				</div>
 			</div>
 
-			<div class="form-group">
-				<label class="col-xs-3 control-label">{% trans "Courier" %}</label>
-				<div class="col-xs-9">
+			<div class="row mb-1">
+				<label class="col-sm-3 col-form-label">{% trans "Courier" %}</label>
+				<div class="col-sm-9">
 					<select name="shipment[courier]" class="form-control">
 						{% for courier in couriers %}
 							<option value="{{ courier|get_class }}/{{ courier.id }}" {% if delivery.courier_object_classname ~ '/' ~ delivery.courier_object_id == courier|get_class ~ '/' ~ courier.id %}selected{% endif %}>
@@ -168,17 +168,17 @@
 
 	<hr />
 
-	<table class="table table-alternate table-hover table-condensed">
+	<table class="table table-alternate table-hover table-condensed table-sm">
 		<thead>
 			<tr>
 				<th>{% trans "Product to ship" %}</th>
-				<th class="text-right">{% trans "Amount" %}</th>
-				<th class="text-right">{% trans "Shipped" %}</th>
-				<th class="text-right">{% trans "To ship" %}</th>
-				<th class="text-right">{% trans "Ship" %}</th>
-				<th class="text-right">{% trans "Stock" %}</th>
-				<th class="text-right">{% trans "Weight" %}</th>
-				<th class="text-right">{% trans "Total Weight" %}</th>
+				<th class="text-end">{% trans "Amount" %}</th>
+				<th class="text-end">{% trans "Shipped" %}</th>
+				<th class="text-end">{% trans "To ship" %}</th>
+				<th class="text-end">{% trans "Ship" %}</th>
+				<th class="text-end">{% trans "Stock" %}</th>
+				<th class="text-end">{% trans "Weight" %}</th>
+				<th class="text-end">{% trans "Total Weight" %}</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -186,25 +186,25 @@
 		{% for delivery_item in delivery.get_overview() %}
 			{% set to_ship = delivery_item.total-delivery_item.shipped %}
 
-			<tr {% if not delivery_item.stock is empty and delivery_item.stock < to_ship %}class="danger"{% endif %}>
+			<tr {% if not delivery_item.stock is empty and delivery_item.stock < to_ship %}class="alert-danger"{% endif %}>
 				<td>
-					<p class="form-control-static">
+					<p class="form-control-plaintext">
 						{{ delivery_item.deliverable.get_name() }}
 					</p>
 				</td>
-				<td class="text-right">
-					<p class="form-control-static">
+				<td class="text-end">
+					<p class="form-control-plaintext">
 						{{ delivery_item.total }}
 					</p>
 				</td>
-				<td class="text-right">
-					<p class="form-control-static">
+				<td class="text-end">
+					<p class="form-control-plaintext">
 						{{ delivery_item.shipped }}
 					</p>
 				</td>
 
-				<td class="text-right">
-					<p class="form-control-static">
+				<td class="text-end">
+					<p class="form-control-plaintext">
 						{{ delivery_item.total-delivery_item.shipped }}
 					</p>
 				</td>
@@ -216,7 +216,7 @@
 				{% endif %}
 				{% set total_weight = total_weight + (max*delivery_item.deliverable.get_weight()) %}
 
-				<td class="text-right" {% if to_ship > 0 %}style="width: 80px;"{% endif %}>
+				<td class="text-end" {% if to_ship > 0 %}style="width: 80px;"{% endif %}>
 					{% if to_ship == 0 %}
 						<em>{% trans "Already shipped" %}</em>
 					{% else %}
@@ -224,29 +224,29 @@
 					{% endif %}
 				</td>
 
-				<td class="text-right">
-					<p class="form-control-static">
+				<td class="text-end">
+					<p class="form-control-plaintext">
 						{{ delivery_item.stock }}
 					</p>
 				</td>
-				<td class="text-right" style="width: 130px">
+				<td class="text-end" style="width: 130px">
 					<div class="input-group">
 						<input type="text" class="form-control weight" name="shipment_item[{{ delivery_item.deliverable|get_class() }}][{{ delivery_item.deliverable.id }}][weight]" value="{{ delivery_item.deliverable.get_weight() }}" onchange="update_total();"/>
-						<div class="input-group-addon">kg</div>
+						<div class="input-group-text">kg</div>
 					</div>
 				</td>
 
-				<td class="text-right" style="width: 130px;">
-					<p class="form-control-static">{{ max*delivery_item.deliverable.get_weight() }} kg</p>
+				<td class="text-end" style="width: 130px;">
+					<p class="form-control-plaintext">{{ max*delivery_item.deliverable.get_weight() }} kg</p>
 				</td>
 			</tr>
 		{% endfor %}
 			<tr>
-				<td colspan="7" class="text-right"><p class="form-control-static"><strong>{% trans "Total weight" %}</strong></p></td>
+				<td colspan="7" class="text-end"><p class="form-control-plaintext"><strong>{% trans "Total weight" %}</strong></p></td>
 				<td>
 					<div class="input-group">
 						<input type="text" class="form-control total_weight" name="shipment[weight]" value="{{ total_weight }}"/>
-						<div class="input-group-addon">kg</div>
+						<div class="input-group-text">kg</div>
 					</div>
 				</td>
 			</tr>
@@ -284,24 +284,24 @@
 
 	$('#shipment_form').on('submit', function(event) {
 		event.preventDefault();
-		$('.has-error').removeClass('has-error');
-		$('li[class^="error_"]').hide();
+		$('.is-invalid').removeClass('is-invalid');
+		$('li[class^="error_"]').addClass('d-none');
 
-		$('#validation-error').hide();
+		$('#validation-error').addClass('d-none');
 		$.post( "{{ (env.module.get_module_path() ~ '?action=validate_shipment')|reverse_rewrite }}", { delivery_id: {{ delivery.id }}, form: $('#shipment_form').serialize() }, function( data ) {
 			if (!data.validated) {
 				$.each(data.shipment_errors, function(key, value) {
-					$('input[name="shipment[' + key + ']"]').parents('.form-group').addClass('has-error');
-					$('.error_' + key).show();
+					$('input[name="shipment[' + key + ']"]').addClass('is-invalid');
+					$('.error_' + key).removeClass('d-none');
 					if (key == 'ups_message') {
 						$('.error_ups_message').html(value);
 					}
 				});
 
 				$.each(data.shipment_item_errors, function(key, value) {
-					$('input[name^=shipment_item]').parents('td').addClass('has-error');
+					$('input[name^=shipment_item]').addClass('is-invalid');
 				});
-				$('#validation-error').show();
+				$('#validation-error').removeClass('d-none');
 				$('#shipment_form').parents('.modal').find('.btn-primary').prop('disabled', false);
 			} else {
 				$('input[name=shipment_id]').val( data.shipment_id );
@@ -317,5 +317,5 @@
 
 {% block footer %}
 	<button type="submit" class="btn btn-primary" onclick="$(this).parents('.modal-content').find('form').submit();">{% trans "Save" %}</button>
-	<button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Cancel" %}</button>
+	<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
 {% endblock footer %}

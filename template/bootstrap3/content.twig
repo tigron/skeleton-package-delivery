@@ -1,0 +1,63 @@
+{% block content %}
+	{% embed "@skeleton-package-crud/bootstrap5/content.twig" with { 'object_name': 'Delivery'|trans} %}
+		{% block page_edit %}
+			{% include "@skeleton-package-delivery/bootstrap5/edit.twig" %}
+		{% endblock page_edit %}
+
+		{% block pager_filters %}
+			<div class="form-group">
+				<label class="control-label col-lg-2">{% trans "Search" %} </label>
+				<div class="controls col-lg-10">
+					<input type="text" class="form-control" name="search" value="{{ pager.get_search() }}"/>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-xs-2 control-label">{% trans "Shipped" %}</label>
+				<div class="col-xs-10">{{ pager.get_condition('shipped') }}
+					<select name="shipped" class="form-control">
+						<option value="0" {% if conditions['delivery.shipped'][0][1] == 0 %}selected{% endif %}>{% trans "No" %}</option>
+						<option value="1" {% if conditions['delivery.shipped'][0][1] == 1 %}selected{% endif %}>{% trans "Yes" %}</option>
+						<option value="-1" {% if conditions['delivery.shipped']is not defined %}selected{% endif %}>{% trans "Any" %}</option>
+					</select>
+				</div>
+			</div>
+
+		{% endblock pager_filters %}
+
+
+		{% block pager_table_head %}
+			<th>{{ pager.create_header('Delivery ID'|trans, 'id')|raw }}</th>
+			<th>{{ pager.create_header('Created'|trans, 'created')|raw }}</th>
+			<th>{{ pager.create_header('Courier'|trans, 'courier_object_id')|raw }}</th>
+			<th>{% trans "In stock" %}</th>
+			<th>{{ pager.create_header('Shipped'|trans, 'shipped')|raw }}</th>
+		{% endblock pager_table_head %}
+
+		{% block pager_table_row %}
+			<td>{{ object.id }}</td>
+			<td>{{ object.created|datetime }}</td>
+			<td>{{ object.get_courier().get_name() }}</td>
+
+			<td>
+				{% if not object.shipped %}
+					{% if object.in_stock() %}
+						<span class="label label-success">{% trans "Yes" %}</span>
+					{% elseif object.partly_in_stock() %}
+						<span class="label label-warning">{% trans "Partly" %}</span>
+					{% else %}
+						<span class="label label-danger">{% trans "No" %}</span>
+					{% endif %}
+				{% endif %}
+			</td>
+
+			<td>
+				{% if object.shipped %}
+					<span class="label label-success">{% trans "Yes" %}</span>
+				{% else %}
+					<span class="label label-danger">{% trans "No" %}</span>
+				{% endif %}
+			</td>
+		{% endblock pager_table_row %}
+	{% endembed %}
+{% endblock content %}

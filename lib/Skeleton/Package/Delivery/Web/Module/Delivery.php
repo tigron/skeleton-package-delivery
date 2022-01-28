@@ -32,7 +32,7 @@ class Delivery extends Crud {
 	 * @access public
 	 * @var string $template
 	 */
-	public $template = '@skeleton-package-delivery\content.twig';
+	public $template = '@skeleton-package-delivery\bootstrap5\content.twig';
 
 
 	/**
@@ -133,7 +133,7 @@ class Delivery extends Crud {
 					}
 
 					if (count($delivery_items) < $data['to_ship']) {
-						throw new Exception('This should not happen, more items are requested for shipment than allowed');
+						throw new \Exception('This should not happen, more items are requested for shipment than allowed');
 					}
 
 					$total_items += $data['to_ship'];
@@ -200,7 +200,7 @@ class Delivery extends Crud {
 		$trace = $shipment->get_courier()->trace($shipment);
 		$template->assign('trace', $trace);
 
-		$this->template = '@skeleton-package-delivery/trace.twig';
+		$this->template = '@skeleton-package-delivery/bootstrap5/trace.twig';
 	}
 
 	/**

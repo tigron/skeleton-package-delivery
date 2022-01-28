@@ -7,7 +7,7 @@
 		"tigron/skeleton-file": "*"
     },
     "require" : {
-        "bower-asset/bootstrap": "3.3.*",
+        "bower-asset/bootstrap": "5.1.*",
         "bower-asset/tigron-confirm-modal": "*",
         "tigron/skeleton-package-crud": "*"
     },

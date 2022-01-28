@@ -1,0 +1,48 @@
+<div class="form-horizontal form-condensed">
+	<div class="form-group">
+		<label class="col-xs-3 control-label">{% trans "UPS Label" %}</label>
+		<div class="col-xs-9">
+			<p class="form-control-static">
+				<a href="{{ env.module.get_module_path() }}?action=label&shipment_id={{ shipment.id }}"><i class="fa fa-barcode"></i> {% trans "Label" %}</a>
+			</p>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-xs-3 control-label">{% trans "Estimated delivery date" %}</label>
+		<div class="col-xs-9">
+			<p class="form-control-static">
+				{% if trace.delivery_date is not null %}{{ trace.delivery_date|datetime }}{% else %}{% trans "Unknown" %}{% endif %}
+			</p>
+		</div>
+	</div>
+
+
+	<div class="form-group">
+		<label class="col-xs-3 control-label">{% trans "Status" %}</label>
+		<div class="col-xs-9">
+			<p class="form-control-static">
+				{{ trace.status }}
+			</p>
+		</div>
+	</div>
+</div>
+
+<table class="table table-alternate table-hover table-condensed">
+<thead>
+	<tr>
+		<th>{% trans "Date" %}</th>
+		<th>{% trans "Location" %}</th>
+		<th>{% trans "Status" %}</th>
+	</tr>
+</thead>
+<tbody>
+{% for activity in trace.activity %}
+	<tr>
+		<td>{{ activity.date|datetime }}</td>
+		<td>{{ activity.location }}</td>
+		<td>{{ activity.status|lower }}</td>
+	</tr>
+{% endfor %}
+</tbody>
+</table>
