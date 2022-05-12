@@ -286,7 +286,6 @@
 		event.preventDefault();
 		$('.is-invalid').removeClass('is-invalid');
 		$('li[class^="error_"]').addClass('d-none');
-
 		$('#validation-error').addClass('d-none');
 		$.post( "{{ (env.module.get_module_path() ~ '?action=validate_shipment')|reverse_rewrite }}", { delivery_id: {{ delivery.id }}, form: $('#shipment_form').serialize() }, function( data ) {
 			if (!data.validated) {
@@ -295,13 +294,15 @@
 					$('.error_' + key).removeClass('d-none');
 					if (key == 'ups_message') {
 						$('.error_ups_message').html(value);
+						$('.error_ups_message').removeClass('d-none');
+
 					}
 				});
 
 				$.each(data.shipment_item_errors, function(key, value) {
 					$('input[name^=shipment_item]').addClass('is-invalid');
 				});
-				$('#validation-error').removeClass('d-none');
+				$('#delivery-validation-error').removeClass('d-none');
 				$('#shipment_form').parents('.modal').find('.btn-primary').prop('disabled', false);
 			} else {
 				$('input[name=shipment_id]').val( data.shipment_id );
